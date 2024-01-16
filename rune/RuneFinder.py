@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import CompressedImage
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
 import numpy as np
 import cv2
 from rune.module.runeDetect import rune_detect 
@@ -12,11 +13,12 @@ class ImageSubscriber(Node):
 
         super().__init__('RuneFinder')
         self.subscription = self.create_subscription(
-            CompressedImage,
+             Image,
             'ImageSend',
             self.listener_callback,
             10)
         self.subscription
+        self.bridge = CvBridge()
         # 创建一个发布器来发布IntList类型的消息
         self.publisher = self.create_publisher(RuneCorner, 'Receive_corner', 10)
 
@@ -26,11 +28,9 @@ class ImageSubscriber(Node):
 
 
     def listener_callback(self, msg):
-        # 将接收到的数据转换为一个 NumPy 数组
-        np_arr = np.frombuffer(msg.data, np.uint8)
-        
         # 解码图像
-        image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        image_np=self.bridge.imgmsg_to_cv2(msg,desired_encoding="bgr8")
+
 
         ansList=self.model.detect(image_np)
         ansList2=[]
