@@ -9,7 +9,7 @@ class rune_detect:
     model = YOLO("")
     targetColor = 0
 
-    def __init__(self,model_path,targetColor):#颜色0为识别蓝色 颜色1为识别红色
+    def __init__(self,model_path,targetColor,imgsz):#颜色0为识别蓝色 颜色1为识别红色
         self.BoolGpu = False
 
         import torch
@@ -24,6 +24,7 @@ class rune_detect:
         self.afterTime=0.00
         self.model = YOLO(model_path)
         self.targetColor = targetColor
+        self.detectSize=imgsz
         self.thresh3 = 76
         print("model have loaded")
     def detect(self,image):#返回的是外部俩点与内部俩点，相对于R都是顺时针方向
@@ -241,7 +242,7 @@ class rune_detect:
 
         start_time = time.time()
         
-        results = self.model(image)
+        results = self.model(source=image,imgsz=self.detectSize)
         
         end_time = time.time()
         self.YoloTime+=end_time-start_time
@@ -301,7 +302,7 @@ class rune_detect:
                     midxBig = xywhBig[0]+xywhBig[2]/2.0
                     midyBig = xywhBig[1]+xywhBig[3]/2.0
                     dis = math.sqrt((midxR-midxBig)*(midxR-midxBig)+(midyR-midyBig)*(midyR-midyBig))
-                    if dis < min(xywhBig[0],xywhBig[1])*1.2:
+                    if dis < min(xywhBig[2],xywhBig[3])*1.2:
                         clslittle,xywhlittle = littleItem
 
                         image2 = image[int(xywhlittle[1]):int(xywhlittle[1]) + int(xywhlittle[3]),

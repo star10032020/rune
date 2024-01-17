@@ -26,10 +26,11 @@ class ImagePublisher(Node):
             cv_image = cv2.imread(image_path)
 
             if cv_image is not None:
+                msg = self.bridge.cv2_to_imgmsg(cv_image,encoding="bgr8")
                 while True:
-                    msg = self.bridge.cv2_to_imgmsg(cv_image,encoding="bgr8")
+                    
                     self.publisher.publish(msg)
-                    self.get_logger().info(f'We are Publishing image: {filename}')
+                    #self.get_logger().info(f'We are Publishing image: {filename}')
             else:
                 self.get_logger().error(f'OHHHHHHHH!Failed to read image: {filename}')
 

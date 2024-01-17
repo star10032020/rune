@@ -24,7 +24,8 @@ class ImageSubscriber(Node):
 
         modelPath="/workspaces/vscode_ros2_workspace/src/rune/rune/module/best.engine"
         targetColor=0
-        self.model = rune_detect(modelPath, targetColor)
+        imgsz=(640,640)
+        self.model = rune_detect(modelPath, targetColor,imgsz)
 
 
     def listener_callback(self, msg):
@@ -44,7 +45,7 @@ class ImageSubscriber(Node):
     
         msg.data = ansList2  # 示例数据
         self.publisher.publish(msg)
-        self.get_logger().info('Published IntList message')
+        #self.get_logger().info('Published IntList message')
 
 def main(args=None):
     rclpy.init(args=args)
