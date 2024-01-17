@@ -302,7 +302,7 @@ class rune_detect:
                     midxBig = xywhBig[0]+xywhBig[2]/2.0
                     midyBig = xywhBig[1]+xywhBig[3]/2.0
                     dis = math.sqrt((midxR-midxBig)*(midxR-midxBig)+(midyR-midyBig)*(midyR-midyBig))
-                    if dis < min(xywhBig[2],xywhBig[3])*1.2:
+                    if dis < min(xywhBig[2],xywhBig[3])*1.2:#应该足够近
                         clslittle,xywhlittle = littleItem
 
                         image2 = image[int(xywhlittle[1]):int(xywhlittle[1]) + int(xywhlittle[3]),
